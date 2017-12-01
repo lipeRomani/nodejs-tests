@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('./server');
+const app = require('./server').app;
 const expect = require('expect');
 
 describe('Server', () => {
@@ -15,7 +15,7 @@ describe('Server', () => {
               name: 'Todo app 1.0v'
             })
         })
-        .end(done);
+        .end((err, res) => done());
     });
   });
 
@@ -31,7 +31,22 @@ describe('Server', () => {
               age: 30
             })
         })
-        .end(done);
+        .end((err, res) => done());
     })
+  });
+
+  describe('GET /user/detail', () => {
+    it('Shold return Felipe user', (done) => {
+      request(app)
+        .get('/user/detail')
+        .expect(200)
+        .expect(({ body }) => {
+          expect(body).toInclude({
+            name: 'Felipe',
+            age: 30
+          })
+        })
+        .end(done);
+    });
   })
 });

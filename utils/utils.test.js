@@ -1,8 +1,10 @@
 const utils = require('./utils');
-const  expect = require('expect');
+const expect = require('expect');
+const mockRequest = require('mock-request');
+const request = require('request-promise-native');
 
 describe('Utils', () => {
-  
+
   describe('#add', () => {
     it('Should add two numbers', () => {
       const result = utils.add(33, 11);
@@ -97,5 +99,20 @@ describe('Utils', () => {
       expect(result).toBe(100).toBeA('number');
       done();
     });
-  }); 
+  });
+  
+  it('Sould get user correcly from get user', (done) => {
+    // this.server.respondWith(
+    //   'GET', 
+    //   'http://www.mocky.io/v2/5a20aa552d00008900dfffb1',
+    //   [200, {"Content-Type" : "application/json"}, '{"name" : "Elisa", "age":29}'])
+
+    utils
+      .getUser()
+      .then((user) => {
+        console.log(user);
+        done()
+      })
+      .catch(err => err)
+  });
 });

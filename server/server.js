@@ -1,4 +1,5 @@
 const express = require('express');
+const { getUser } = require('../utils/utils');
 
 const app = express();
 
@@ -28,8 +29,14 @@ app.get('/users', (req, res) => {
   res.status(200).json(users);
 });
 
+app.get('/user/detail', (req, res) => {
+  getUser()
+    .then(result => res.status(200).json(result))
+    .catch(err => res.status(500).json(err));
+});
+
 app.listen(3030, () => {
   console.log('Listen on port 3030');
 })
 
-module.exports = app;
+module.exports.app = app;
