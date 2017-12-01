@@ -2,6 +2,7 @@ const utils = require('./utils');
 const expect = require('expect');
 const mockRequest = require('mock-request');
 const request = require('request-promise-native');
+const rewire = require('rewire');
 
 describe('Utils', () => {
 
@@ -102,17 +103,25 @@ describe('Utils', () => {
   });
   
   it('Sould get user correcly from get user', (done) => {
-    // this.server.respondWith(
-    //   'GET', 
-    //   'http://www.mocky.io/v2/5a20aa552d00008900dfffb1',
-    //   [200, {"Content-Type" : "application/json"}, '{"name" : "Elisa", "age":29}'])
 
-    utils
-      .getUser()
-      .then((user) => {
-        console.log(user);
-        done()
+    const mockUtils = rewire('../utils/utils.js');
+    
+    mockUtils.__set__('request', () => {
+      return new Promise((resolve, reject) => {
+        resolve(JSON.stringify({
+          name: 'Elisa',
+          age: 29
+        }))
       })
-      .catch(err => err)
+    });
+
+    mockUtils.getUser()
+      .then((user) => {
+        expect(user).toInclude({
+          name: 'Elisa'
+        });
+        done();
+      })
+      .catch(err => done(err))
   });
 });

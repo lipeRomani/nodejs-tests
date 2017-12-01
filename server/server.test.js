@@ -46,7 +46,7 @@ describe('Server', () => {
             age: 30
           })
         })
-        .end(done);
+        .end((err, res) => done(err));
     });
   })
 });
